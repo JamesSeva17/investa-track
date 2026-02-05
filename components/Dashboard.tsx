@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Position, AIInsight, AssetType, Portfolio } from '../types.ts';
 import { formatCurrency, formatPercent } from '../utils/calculations.ts';

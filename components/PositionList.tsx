@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Position, AssetType, Portfolio } from '../types.ts';
 import { formatCurrency, formatPercent } from '../utils/calculations.ts';
@@ -69,7 +68,6 @@ const PositionList: React.FC<PositionListProps> = ({ positions, currentPortfolio
     <div className="space-y-6 pb-24 md:pb-20">
       {platforms.map(platform => {
         const isCollapsed = collapsedPlatforms[platform];
-        // Total Capital = Total invested amount (quantity * price, excluding buy/sell fees)
         const platformTotalCapital = grouped[platform].reduce((sum, p) => sum + p.totalInvested, 0);
         
         return (

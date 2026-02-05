@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaultify | PSEI & Crypto Tracker</title>
-    <meta name="description" content="Precision investment tracker for Philippine stocks and cryptocurrency with AI-driven insights and cloud sync.">
     
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +19,6 @@
         margin: 0;
         padding: 0;
       }
-      /* Professional Boot Loader */
       #app-loader {
         position: fixed;
         inset: 0;
@@ -50,15 +48,16 @@
         letter-spacing: 0.2em;
         color: #94a3b8;
       }
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #e2e8f0;
-        border-radius: 10px;
+      #error-boundary {
+        display: none;
+        position: fixed;
+        inset: 2rem;
+        background: #fff;
+        border: 2px solid #fee2e2;
+        border-radius: 1.5rem;
+        padding: 2rem;
+        z-index: 10000;
+        overflow: auto;
       }
     </style>
 
@@ -79,17 +78,44 @@
 <body>
     <div id="app-loader">
         <div class="spinner"></div>
-        <div class="loader-text">Initializing Engine...</div>
+        <div class="loader-text">Waking up Engine...</div>
+    </div>
+
+    <div id="error-boundary">
+      <h2 style="color: #dc2626; font-weight: 900; text-transform: uppercase; font-size: 14px; margin-bottom: 1rem;">System Error</h2>
+      <pre id="error-console" style="background: #fef2f2; padding: 1rem; border-radius: 1rem; font-size: 12px; font-family: monospace; white-space: pre-wrap;"></pre>
+      <button onclick="location.reload()" style="margin-top: 1rem; background: #000; color: #fff; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 900; font-size: 10px; text-transform: uppercase;">Retry Boot</button>
     </div>
 
     <div id="root"></div>
 
-    <!-- The esm.sh runner handles transpilation of .tsx files -->
+    <!-- Error Reporting -->
+    <script>
+      window.addEventListener('error', function(e) {
+        console.error(e);
+        const boundary = document.getElementById('error-boundary');
+        const consoleEl = document.getElementById('error-console');
+        if (boundary && consoleEl) {
+          boundary.style.display = 'block';
+          consoleEl.textContent += (e.message || e.reason || 'Unknown error') + '\n' + (e.filename || '') + ':' + (e.lineno || '') + '\n';
+        }
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        console.error(e);
+        const boundary = document.getElementById('error-boundary');
+        const consoleEl = document.getElementById('error-console');
+        if (boundary && consoleEl) {
+          boundary.style.display = 'block';
+          consoleEl.textContent += 'Unhandled Rejection: ' + (e.reason?.message || e.reason || 'Unknown rejection') + '\n';
+        }
+      });
+    </script>
+
+    <!-- App Boot -->
     <script type="text/tsx" src="index.tsx"></script>
     <script type="module" src="https://esm.sh/run"></script>
 
     <script type="module">
-      // Auto-hide loader when the React app mounts and populates the root element
       const observer = new MutationObserver((mutations, obs) => {
         const root = document.getElementById('root');
         if (root && root.children.length > 0) {
@@ -103,14 +129,13 @@
       });
       observer.observe(document.body, { childList: true, subtree: true });
 
-      // Safety fallback to hide loader even if there is a silent initialization error
       setTimeout(() => {
         const loader = document.getElementById('app-loader');
         if (loader && loader.parentElement) {
-          loader.style.opacity = '0';
-          setTimeout(() => loader.remove(), 500);
+          const text = loader.querySelector('.loader-text');
+          if(text) text.textContent = 'Still loading dependencies...';
         }
-      }, 10000);
+      }, 5000);
     </script>
 </body>
 </html>

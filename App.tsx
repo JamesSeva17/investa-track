@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Transaction, Position, AIInsight, TransactionType, AssetType, Portfolio } from './types.ts';
 import { calculatePositions } from './utils/calculations.ts';

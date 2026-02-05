@@ -1,7 +1,6 @@
-
 import React from 'react';
-import { Transaction, TransactionType, AssetType, Portfolio } from '../types';
-import { formatCurrency } from '../utils/calculations';
+import { Transaction, TransactionType, Portfolio } from '../types.ts';
+import { formatCurrency } from '../utils/calculations.ts';
 
 interface TradeHistoryProps {
   transactions: Transaction[];

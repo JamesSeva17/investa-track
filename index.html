@@ -6,15 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaultify | PSEI & Crypto Tracker</title>
     <meta name="description" content="Precision investment tracker for Philippine stocks and cryptocurrency with AI-driven insights and cloud sync.">
-    <!-- Tailwind CSS Play CDN -->
+    
+    <!-- Tailwind CSS Play CDN (Note: Console warning is expected in no-build environments) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
       body {
         font-family: 'Inter', sans-serif;
         background-color: #f8fafc;
       }
+      /* Custom scrollbar for better UX */
       ::-webkit-scrollbar {
         width: 6px;
       }
@@ -29,6 +34,7 @@
         background: #cbd5e1;
       }
     </style>
+
     <script type="importmap">
     {
       "imports": {
@@ -45,7 +51,13 @@
 </head>
 <body>
     <div id="root"></div>
-    <!-- Entry point for the application bootstrap -->
-    <script type="module" src="index.tsx"></script>
+
+    <!-- 
+      The 'esm.sh/run' script is a zero-build transpiler that handles .tsx files and their imports 
+      directly in the browser. Using type="text/tsx" ensures the browser doesn't try to load the 
+      file as a native module, which avoids MIME type errors on static hosts like GitHub Pages.
+    -->
+    <script type="text/tsx" src="index.tsx"></script>
+    <script type="module" src="https://esm.sh/run"></script>
 </body>
 </html>

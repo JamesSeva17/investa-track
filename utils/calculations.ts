@@ -89,7 +89,8 @@ export const calculatePositions = (transactions: Transaction[], portfolioId: str
           pos.grossMarketValue = grossValue;
 
           // SPECIAL COL FINANCIAL CALCULATION (Net Paper Gain)
-          if (pos.platform === 'Col Financial' || pos.assetType === AssetType.STOCK) {
+          // Matching 'col' to the default platform list
+          if (pos.platform.toLowerCase() === 'col' || pos.assetType === AssetType.STOCK) {
             const estimatedExitFees = grossValue * 0.00395;
             pos.sellingFees = estimatedExitFees;
             pos.marketValue = grossValue - estimatedExitFees;

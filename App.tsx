@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Transaction, Position, AIInsight, TransactionType, AssetType, Portfolio } from './types';
-import { calculatePositions } from './utils/calculations';
-import { getMarketInsights, getAssetPrices } from './services/geminiService';
-import Dashboard from './components/Dashboard';
-import PositionList from './components/PositionList';
-import TradeHistory from './components/TradeHistory';
-import TransactionForm from './components/TransactionForm';
-import SyncModal from './components/SyncModal';
+import { Transaction, Position, AIInsight, TransactionType, AssetType, Portfolio } from './types.ts';
+import { calculatePositions } from './utils/calculations.ts';
+import { getMarketInsights, getAssetPrices } from './services/geminiService.ts';
+import Dashboard from './components/Dashboard.tsx';
+import PositionList from './components/PositionList.tsx';
+import TradeHistory from './components/TradeHistory.tsx';
+import TransactionForm from './components/TransactionForm.tsx';
+import SyncModal from './components/SyncModal.tsx';
 
 const DEFAULT_PLATFORMS = ['coins.ph', 'col', 'bybit', 'maya', 'all ph banks', 'gcash'];
 

@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Position, AIInsight, AssetType, Portfolio } from '../types';
-import { formatCurrency, formatPercent } from '../utils/calculations';
+import { Position, AIInsight, AssetType, Portfolio } from '../types.ts';
+import { formatCurrency, formatPercent } from '../utils/calculations.ts';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface DashboardProps {
@@ -55,10 +55,10 @@ const Dashboard: React.FC<DashboardProps> = ({ positions, aiInsight, loading, cu
 
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
           <div>
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Capital (Inc. Fees)</p>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Capital (Pure)</p>
             <p className="text-2xl font-black text-gray-800">{formatCurrency(totalInvested, currentPortfolio.baseCurrency)}</p>
           </div>
-          <p className="text-[9px] text-gray-400 font-bold uppercase mt-4">Actual Outlay</p>
+          <p className="text-[9px] text-gray-400 font-bold uppercase mt-4">Excluded Transaction Fees</p>
         </div>
 
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
@@ -115,13 +115,13 @@ const Dashboard: React.FC<DashboardProps> = ({ positions, aiInsight, loading, cu
 
         <div className="bg-gray-900 p-8 rounded-3xl shadow-xl flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xs font-black text-white uppercase tracking-widest">Col Financial & Crypto Intel</h3>
+            <h3 className="text-xs font-black text-white uppercase tracking-widest">Market Intel</h3>
             <div className={`w-3 h-3 rounded-full animate-pulse ${
               aiInsight?.sentiment === 'positive' ? 'bg-emerald-500' : 
               aiInsight?.sentiment === 'negative' ? 'bg-rose-500' : 'bg-gray-500'
             }`}></div>
           </div>
-          <div className="flex-1 overflow-y-auto space-y-5">
+          <div className="flex-1 overflow-y-auto space-y-5 text-gray-300">
             {loading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map(i => (
@@ -133,7 +133,7 @@ const Dashboard: React.FC<DashboardProps> = ({ positions, aiInsight, loading, cu
               </div>
             ) : aiInsight ? (
               <>
-                <div className="text-gray-400 text-xs leading-relaxed font-medium">
+                <div className="text-[12px] leading-relaxed font-medium">
                   <p>{aiInsight.content}</p>
                 </div>
                 {aiInsight.sources.length > 0 && (
@@ -149,7 +149,7 @@ const Dashboard: React.FC<DashboardProps> = ({ positions, aiInsight, loading, cu
             ) : (
               <div className="text-center py-10 opacity-30">
                 <i className="fa-solid fa-brain text-4xl text-white mb-4 block"></i>
-                <p className="text-[10px] text-white font-black uppercase">Add stocks to analyze</p>
+                <p className="text-[10px] text-white font-black uppercase">Add assets to analyze</p>
               </div>
             )}
           </div>

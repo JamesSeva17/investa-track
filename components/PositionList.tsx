@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Position, AssetType, Portfolio } from '../types';
-import { formatCurrency, formatPercent } from '../utils/calculations';
+import { Position, AssetType, Portfolio } from '../types.ts';
+import { formatCurrency, formatPercent } from '../utils/calculations.ts';
 
 interface PositionListProps {
   positions: any[]; 
@@ -74,7 +74,6 @@ const PositionList: React.FC<PositionListProps> = ({ positions, currentPortfolio
         
         return (
           <div key={platform} className="space-y-3">
-            {/* Platform Header: Clean naming (no PORTFOLIO suffix) */}
             <div 
               onClick={() => togglePlatform(platform)}
               className="flex justify-between items-end px-2 cursor-pointer select-none group"

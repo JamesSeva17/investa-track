@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Portfolio } from '../types';
+import { Portfolio } from '../types.ts';
 
 interface PortfolioModalProps {
   onAdd: (name: string, currency: string) => void;

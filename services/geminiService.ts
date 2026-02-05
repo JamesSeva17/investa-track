@@ -1,6 +1,6 @@
 
 import { GoogleGenAI } from "@google/genai";
-import { AssetType, AIInsight } from "../types";
+import { AssetType, AIInsight } from "../types.ts";
 
 /**
  * Fetches market insights using Gemini 3 Flash with Google Search grounding.

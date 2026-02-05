@@ -1,5 +1,5 @@
 
-import { Transaction, Position, TransactionType, AssetType } from "../types";
+import { Transaction, Position, TransactionType, AssetType } from "../types.ts";
 
 export interface PositionWithGrowth extends Position {
   previousMonthBalance?: number;
@@ -11,9 +11,6 @@ export interface PositionWithGrowth extends Position {
 
 /**
  * Calculates positions using High-Precision Weighted Average Cost (WAC).
- * 
- * UPDATE: Following user request to exclude fees from capital calculations.
- * totalInvested now purely represents (quantity * purchase_price).
  */
 export const calculatePositions = (transactions: Transaction[], portfolioId: string): PositionWithGrowth[] => {
   const positionMap: Record<string, PositionWithGrowth> = {};
@@ -21,7 +18,6 @@ export const calculatePositions = (transactions: Transaction[], portfolioId: str
   const now = new Date();
   const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  // Sort by date to ensure calculations are chronological
   const filtered = transactions
     .filter(tx => tx.portfolioId === portfolioId)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -44,14 +40,11 @@ export const calculatePositions = (transactions: Transaction[], portfolioId: str
     const txDate = new Date(tx.date);
 
     if (tx.type === TransactionType.BUY) {
-      // EXCLUDING FEES from capital as requested
       const purchaseOutlay = (tx.price * tx.quantity); 
       pos.totalInvested += purchaseOutlay;
       pos.totalQuantity += tx.quantity;
-      // Derive precision Average Price
       pos.averagePrice = pos.totalQuantity > 0 ? pos.totalInvested / pos.totalQuantity : 0;
     } else {
-      // SELL logic: Reduce holdings proportionally to the current cost basis
       if (pos.totalQuantity > 0) {
         const ratio = tx.quantity / pos.totalQuantity;
         pos.totalInvested -= (pos.totalInvested * ratio);
@@ -66,7 +59,6 @@ export const calculatePositions = (transactions: Transaction[], portfolioId: str
       }
     }
 
-    // Savings logic
     if (tx.assetType === AssetType.SAVING) {
       if (tx.currentBalanceSnapshot !== undefined) {
         if (txDate < startOfThisMonth) {
@@ -88,8 +80,6 @@ export const calculatePositions = (transactions: Transaction[], portfolioId: str
           const grossValue = pos.totalQuantity * pos.currentPrice;
           pos.grossMarketValue = grossValue;
 
-          // SPECIAL COL FINANCIAL CALCULATION (Net Paper Gain)
-          // Matching 'col' to the default platform list
           if (pos.platform.toLowerCase() === 'col' || pos.assetType === AssetType.STOCK) {
             const estimatedExitFees = grossValue * 0.00395;
             pos.sellingFees = estimatedExitFees;

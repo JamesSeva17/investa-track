@@ -1,0 +1,4 @@
+*.tsx text/javascript
+*.ts text/javascript
+*.jsx text/javascript
+*.js text/javascript

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Transaction, SyncData } from '../types';
-import { syncService } from '../services/syncService';
+import { Transaction, SyncData } from '../types.ts';
+import { syncService } from '../services/syncService.ts';
 
 interface SyncModalProps {
   onClose: () => void;
@@ -82,7 +82,6 @@ const SyncModal: React.FC<SyncModalProps> = ({ onClose, transactions, platforms,
         </div>
 
         <div className="p-8 space-y-8">
-          {/* Section 1: Generate / Push */}
           <div className="space-y-4">
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Your Device Sync Code</p>
             <div className="flex gap-2">
@@ -112,7 +111,6 @@ const SyncModal: React.FC<SyncModalProps> = ({ onClose, transactions, platforms,
             <div className="relative flex justify-center text-[10px]"><span className="bg-white px-4 text-gray-300 font-black uppercase tracking-widest">OR RESTORE FROM CODE</span></div>
           </div>
 
-          {/* Section 2: Pull from existing code */}
           <div className="space-y-4">
             <input
               type="text"

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Transaction, TransactionType, AssetType } from '../types';
+import { Transaction, TransactionType, AssetType } from '../types.ts';
 
 interface TransactionFormProps {
   onAdd: (tx: Omit<Transaction, 'id' | 'portfolioId'>) => void;

@@ -1,19 +1,13 @@
 
-import { SyncData } from "../types";
+import { SyncData } from "../types.ts";
 
 /**
  * JSONBin.io v3 Integration (Private Mode)
- * This service uses the provided Master Key to create and manage 
- * private bins, ensuring data privacy and security.
  */
 const JSONBIN_API_BASE = "https://api.jsonbin.io/v3/b";
 const MASTER_KEY = "$2a$10$UDkVQcUTb9K75p2Xf6rO1u6Ytn.lxwZVSkFN49vHZKO3.trLqSWY2";
 
 export const syncService = {
-  /**
-   * Pushes local data to a JSONBin.
-   * Uses X-Master-Key for authentication and sets bins to private.
-   */
   async push(key: string, data: SyncData): Promise<string | null> {
     try {
       const isNew = !key;
@@ -25,7 +19,6 @@ export const syncService = {
         'X-Master-Key': MASTER_KEY,
       };
 
-      // When creating a new bin, we explicitly set it to private
       if (isNew) {
         headers['X-Bin-Private'] = 'true';
         headers['X-Bin-Name'] = `Vaultify_Backup_${Date.now()}`;
@@ -44,7 +37,6 @@ export const syncService = {
       }
 
       const result = await response.json();
-      // For POST, ID is in metadata.id. For PUT, we return the existing key.
       return isNew ? result.metadata.id : key;
     } catch (error) {
       console.error("JSONBin push failed:", error);
@@ -52,9 +44,6 @@ export const syncService = {
     }
   },
 
-  /**
-   * Pulls data from a private JSONBin using the Bin ID and Master Key.
-   */
   async pull(key: string): Promise<SyncData | null> {
     if (!key) return null;
     try {

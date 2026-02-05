@@ -31,33 +31,40 @@
         transition: opacity 0.5s ease-out;
       }
       .spinner {
-        width: 32px;
-        height: 32px;
-        border: 3px solid #e2e8f0;
-        border-top: 3px solid #3b82f6;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e2e8f0;
+        border-top: 4px solid #3b82f6;
         border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        margin-bottom: 1.5rem;
+        animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        margin-bottom: 2rem;
       }
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       .loader-text {
         font-family: 'Inter', sans-serif;
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 900;
         text-transform: uppercase;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.3em;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+      }
+      .loader-status {
+        font-family: monospace;
+        font-size: 10px;
         color: #94a3b8;
       }
       #error-boundary {
         display: none;
         position: fixed;
-        inset: 2rem;
+        inset: 1rem;
         background: #fff;
-        border: 2px solid #fee2e2;
-        border-radius: 1.5rem;
-        padding: 2rem;
+        border: 1px solid #fee2e2;
+        border-radius: 2rem;
+        padding: 2.5rem;
         z-index: 10000;
         overflow: auto;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
       }
     </style>
 
@@ -69,8 +76,8 @@
         "react-dom": "https://esm.sh/react-dom@19.0.0",
         "react-dom/": "https://esm.sh/react-dom@19.0.0/",
         "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-        "recharts": "https://esm.sh/recharts@3.7.0",
-        "@google/genai": "https://esm.sh/@google/genai@1.39.0"
+        "recharts": "https://esm.sh/recharts@2.15.0?bundle",
+        "@google/genai": "https://esm.sh/@google/genai@1.3.0?bundle"
       }
     }
     </script>
@@ -78,40 +85,58 @@
 <body>
     <div id="app-loader">
         <div class="spinner"></div>
-        <div class="loader-text">Waking up Engine...</div>
+        <div class="loader-text">Vaultify OS</div>
+        <div class="loader-status" id="boot-status">Initializing environment...</div>
     </div>
 
     <div id="error-boundary">
-      <h2 style="color: #dc2626; font-weight: 900; text-transform: uppercase; font-size: 14px; margin-bottom: 1rem;">System Error</h2>
-      <pre id="error-console" style="background: #fef2f2; padding: 1rem; border-radius: 1rem; font-size: 12px; font-family: monospace; white-space: pre-wrap;"></pre>
-      <button onclick="location.reload()" style="margin-top: 1rem; background: #000; color: #fff; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 900; font-size: 10px; text-transform: uppercase;">Retry Boot</button>
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center text-rose-600">
+           <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h2 class="text-xl font-black text-gray-900 uppercase tracking-tighter">System Fault Detected</h2>
+      </div>
+      <pre id="error-console" style="background: #f8fafc; padding: 1.5rem; border-radius: 1rem; font-size: 12px; font-family: monospace; white-space: pre-wrap; color: #475569; border: 1px solid #e2e8f0;"></pre>
+      <div class="mt-8 flex gap-3">
+        <button onclick="location.reload()" class="bg-gray-900 text-white px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all">
+          Attempt Hot Reboot
+        </button>
+        <button onclick="localStorage.clear(); location.reload();" class="bg-gray-100 text-gray-500 px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-200 transition-all">
+          Clear Cache & Reset
+        </button>
+      </div>
     </div>
 
     <div id="root"></div>
 
-    <!-- Error Reporting -->
     <script>
+      const statusEl = document.getElementById('boot-status');
+      const updateStatus = (msg) => { if(statusEl) statusEl.textContent = msg; };
+
       window.addEventListener('error', function(e) {
-        console.error(e);
+        console.error('Runtime Error:', e);
         const boundary = document.getElementById('error-boundary');
         const consoleEl = document.getElementById('error-console');
         if (boundary && consoleEl) {
           boundary.style.display = 'block';
-          consoleEl.textContent += (e.message || e.reason || 'Unknown error') + '\n' + (e.filename || '') + ':' + (e.lineno || '') + '\n';
+          consoleEl.textContent += `[Error] ${e.message || 'Unknown'}\nAt: ${e.filename || 'internal'}:${e.lineno || '?'}\n\n`;
         }
       });
+
       window.addEventListener('unhandledrejection', function(e) {
-        console.error(e);
+        console.error('Promise Rejection:', e);
         const boundary = document.getElementById('error-boundary');
         const consoleEl = document.getElementById('error-console');
         if (boundary && consoleEl) {
           boundary.style.display = 'block';
-          consoleEl.textContent += 'Unhandled Rejection: ' + (e.reason?.message || e.reason || 'Unknown rejection') + '\n';
+          consoleEl.textContent += `[Rejection] ${e.reason?.message || e.reason || 'Unknown'}\n\n`;
         }
       });
+
+      updateStatus('Loading Core Modules...');
     </script>
 
-    <!-- App Boot -->
+    <!-- The app code is served as type="text/tsx" so esm.sh/run picks it up -->
     <script type="text/tsx" src="index.tsx"></script>
     <script type="module" src="https://esm.sh/run"></script>
 
@@ -130,12 +155,14 @@
       observer.observe(document.body, { childList: true, subtree: true });
 
       setTimeout(() => {
-        const loader = document.getElementById('app-loader');
-        if (loader && loader.parentElement) {
-          const text = loader.querySelector('.loader-text');
-          if(text) text.textContent = 'Still loading dependencies...';
+        const root = document.getElementById('root');
+        if (root && root.children.length === 0) {
+          const boundary = document.getElementById('error-boundary');
+          if (boundary && boundary.style.display !== 'block') {
+            updateStatus('Network Delay: Transpiling source files...');
+          }
         }
-      }, 5000);
+      }, 10000);
     </script>
 </body>
 </html>
